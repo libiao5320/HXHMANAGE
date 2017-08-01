@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbOrderStatusCust" class="com.hxh.model.TbOrderStatusCust">
+        <result property="statusId" column="STATUS_ID"/>
+        <result property="statusName" column="STATUS_NAME"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbOrderStatusCust.columns">
+	    <![CDATA[
+        	STATUS_ID ,
+        	STATUS_NAME 
+	    ]]>
+	</sql>
+	
+    <insert id="TbOrderStatusCust.insert" >
+    <![CDATA[
+        INSERT INTO TB_ORDER_STATUS_CUST (
+        	STATUS_ID ,
+        	STATUS_NAME 
+        ) VALUES (
+        	#statusId# ,
+        	#statusName# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="statusId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbOrderStatusCust.update" >
+    <![CDATA[
+        UPDATE TB_ORDER_STATUS_CUST SET
+	        STATUS_NAME = #statusName# 
+        WHERE 
+	        STATUS_ID = #statusId# 
+    ]]>
+    </update>
+
+    <delete id="TbOrderStatusCust.delete">
+    <![CDATA[
+        DELETE FROM TB_ORDER_STATUS_CUST WHERE
+        STATUS_ID = #statusId# 
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbOrderStatusCust.getById" resultMap="RM.TbOrderStatusCust">
+	    SELECT <include refid="TbOrderStatusCust.columns"/>
+	    <![CDATA[
+	        FROM TB_ORDER_STATUS_CUST 
+	        WHERE 
+		        STATUS_ID = #statusId# 
+	    ]]>
+    </select>
+
+	<sql id="TbOrderStatusCust.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="statusId">
+		             STATUS_ID = #statusId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="statusName">
+		             STATUS_NAME = #statusName#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbOrderStatusCust.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_ORDER_STATUS_CUST <include refid="TbOrderStatusCust.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbOrderStatusCust.findPage" resultMap="RM.TbOrderStatusCust">
+    	SELECT <include refid="TbOrderStatusCust.columns"/> FROM TB_ORDER_STATUS_CUST 
+		<include refid="TbOrderStatusCust.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	 <select id="TbOrderStatusCust.queryAll" resultMap="RM.TbOrderStatusCust">
+        SELECT <include refid="TbOrderStatusCust.columns"/> FROM TB_ORDER_STATUS_CUST
+    </select>
+	
+</sqlMap>
+

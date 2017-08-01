@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ http://www.springframework.org/schema/tx
+ http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd ">
+
+
+
+
+    <bean id="tbOrderService" class="com.hxh.services.TbOrder.impl.TbOrderServiceImpl">
+        <property name="tbOrderDao">
+            <ref bean="tbOrderDao"/>
+        </property>
+
+    </bean>
+
+   <bean id="tbUserService" class="com.hxh.services.TbUser.impl.TbUserServiceImpl">
+       <property name="tbUserDao">
+           <ref bean="tbUserDao"/>
+       </property>
+       <property name="tbUserExtDao">
+           <ref bean="tbUserExtDao"/>
+       </property>
+       <property name="tbUserAccountDao">
+           <ref bean="tbUserAccountDao"/>
+       </property>
+    </bean>
+
+    <bean id="tbUserAccountService" class="com.hxh.services.TbUserAccount.impl.TbUserAccountServiceImpl">
+        <property name="tbUserAccountDao">
+            <ref bean="tbUserAccountDao"/>
+        </property>
+    </bean>
+
+    <bean id="tbUserAddressService" class="com.hxh.services.TbUserAddress.impl.TbUserAddressServiceImpl">
+        <property name="tbUserAddressDao">
+            <ref bean="tbUserAddressDao"/>
+        </property>
+    </bean>
+
+    <bean id="tbUserExtService" class="com.hxh.services.TbUserExt.impl.TbUserExtServiceImpl">
+        <property name="tbUserExtDao">
+            <ref bean="tbUserExtDao"/>
+        </property>
+    </bean>
+    
+    <bean id="tbDiserService" class="com.hxh.services.TbDiser.impl.TbDiserServiceImpl">
+        <property name="tbDiserDao">
+            <ref bean="tbDiserDao"/>
+        </property>
+        <property name="tbDisCommRelDao">
+            <ref bean="tbDisCommRelDao"/>
+        </property>
+
+    </bean>
+    <bean id="tbDisCommRelService" class="com.hxh.services.TbDisCommRel.impl.TbDisCommRelServiceImpl">
+        <property name="tbDisCommRelDao">
+            <ref bean="tbDisCommRelDao"/>
+        </property>
+
+    </bean>
+    <bean id="tbOrderProRelService" class="com.hxh.services.TbOrderProRel.impl.TbOrderProRelServiceImpl">
+        <property name="tbOrderProRelDao">
+            <ref bean="tbOrderProRelDao"/>
+        </property>
+
+    </bean>
+
+    <bean id="tbOrderStatusService" class="com.hxh.services.TbOrderStatus.impl.TbOrderStatusServiceImpl">
+        <property name="tbOrderStatusDao">
+            <ref bean="tbOrderStatusDao"/>
+        </property>
+
+    </bean>
+
+    <bean id="tbCommunityService" class="com.hxh.services.TbCommunity.impl.TbCommunityServiceImpl">
+        <property name="tbCommunityDao">
+            <ref bean="tbCommunityDao"/>
+        </property>
+        <property name="tbCommDetailDao">
+            <ref bean="tbCommDetailDao"/>
+        </property>
+        <property name="tbDisCommRelDao">
+            <ref bean="tbDisCommRelDao"/>
+        </property>
+    </bean>
+
+    <bean id="tbCommDetailService" class="com.hxh.services.TbCommDetail.impl.TbCommDetailServiceImpl">
+        <property name="tbCommDetailDao">
+            <ref bean="tbCommDetailDao"/>
+        </property>
+    </bean>
+
+    <bean id="tbRegionalService" class="com.hxh.services.TbRegional.impl.TbRegionalServiceImpl">
+        <property name="tbRegionalDao">
+            <ref bean="tbRegionalDao"/>
+        </property>
+    </bean>
+
+
+    <bean id="tbProductService" class="com.hxh.services.TbProduct.impl.TbProductServiceImpl">
+        <property name="tbProductDao">
+            <ref bean="tbProductDao"/>
+        </property>
+    </bean>
+
+
+    <bean id="tbProductTypeService" class="com.hxh.services.TbProductType.impl.TbProductTypeServiceImpl">
+        <property name="tbProductTypeDao">
+            <ref bean="tbProductTypeDao"/>
+        </property>
+    </bean>
+
+
+
+
+
+    <import resource="classpath*:applicatinContext_Dao.xml"/>
+</beans>

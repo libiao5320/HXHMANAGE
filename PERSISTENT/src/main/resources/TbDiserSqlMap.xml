@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbDiser" class="com.hxh.model.TbDiser">
+        <result property="disId" column="DIS_ID"/>
+        <result property="disWorknum" column="DIS_WORKNUM"/>
+        <result property="disName" column="DIS_NAME"/>
+        <result property="disUsername" column="DIS_USERNAME"/>
+        <result property="disPwd" column="DIS_PWD"/>
+        <result property="disWx" column="DIS_WX"/>
+        <result property="disPhone" column="DIS_PHONE"/>
+        <result property="disStatus" column="DIS_STATUS"/>
+        <result property="disPhoto" column="DIS_PHOTO"/>
+        <result property="disGood" column="DIS_GOOD"/>
+        <result property="disBad" column="DIS_BAD"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbDiser.columns">
+	    <![CDATA[
+        	DIS_ID ,
+        	DIS_WORKNUM ,
+        	DIS_NAME ,
+        	DIS_USERNAME ,
+        	DIS_PWD ,
+        	DIS_WX ,
+        	DIS_PHONE ,
+        	DIS_STATUS ,
+        	DIS_PHOTO ,
+        	DIS_GOOD ,
+        	DIS_BAD 
+	    ]]>
+	</sql>
+	
+    <insert id="TbDiser.insert" >
+    <![CDATA[
+        INSERT INTO TB_DISER (
+        	DIS_ID ,
+        	DIS_WORKNUM ,
+        	DIS_NAME ,
+        	DIS_USERNAME ,
+        	DIS_PWD ,
+        	DIS_WX ,
+        	DIS_PHONE ,
+        	DIS_STATUS ,
+        	DIS_PHOTO ,
+        	DIS_GOOD ,
+        	DIS_BAD 
+        ) VALUES (
+        	#disId# ,
+        	#disWorknum# ,
+        	#disName# ,
+        	#disUsername# ,
+        	#disPwd# ,
+        	#disWx# ,
+        	#disPhone# ,
+        	#disStatus# ,
+        	#disPhoto# ,
+        	#disGood# ,
+        	#disBad# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="disId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+
+	<select id="TbDiser.manageListDiserByCondition" resultMap="RM.TbDiser">
+
+		SELECT <include refid="TbDiser.columns"/> FROM TB_DISER
+		where 1=1
+		<dynamic >
+
+			<isNotEmpty prepend="AND" property="workNum"  >
+				<![CDATA[     DIS_WORKNUM = #workNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND"  property="diserName" >
+				<![CDATA[     DIS_NAME = #diserName# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND"  property="phone" >
+				<![CDATA[    DIS_PHONE = #phone# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND"  property="q" >
+				<![CDATA[    DIS_ID IN (#q#) ]]>
+			</isNotEmpty>
+		</dynamic>
+
+
+		order by DIS_WORKNUM desc
+
+
+	</select>
+
+
+
+    <update id="TbDiser.update" >
+    <![CDATA[
+        UPDATE TB_DISER SET
+	        DIS_WORKNUM = #disWorknum# ,
+	        DIS_NAME = #disName# ,
+	        DIS_USERNAME = #disUsername# ,
+	        DIS_PWD = #disPwd# ,
+	        DIS_WX = #disWx# ,
+	        DIS_PHONE = #disPhone# ,
+	        DIS_STATUS = #disStatus# ,
+	        DIS_PHOTO = #disPhoto# ,
+	        DIS_GOOD = #disGood# ,
+	        DIS_BAD = #disBad# 
+        WHERE 
+	        DIS_ID = #disId# 
+    ]]>
+    </update>
+
+    <delete id="TbDiser.delete">
+    <![CDATA[
+        DELETE FROM TB_DISER WHERE
+        DIS_ID = #disId# 
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbDiser.getById" resultMap="RM.TbDiser">
+	    SELECT <include refid="TbDiser.columns"/>
+	    <![CDATA[
+	        FROM TB_DISER 
+	        WHERE 
+		        DIS_ID = #id#
+	    ]]>
+    </select>
+
+	<sql id="TbDiser.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="disId">
+		             DIS_ID = #disId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disWorknum">
+		             DIS_WORKNUM = #disWorknum#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disName">
+		             DIS_NAME = #disName#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disUsername">
+		             DIS_USERNAME = #disUsername#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disPwd">
+		             DIS_PWD = #disPwd#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disWx">
+		             DIS_WX = #disWx#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disPhone">
+		             DIS_PHONE = #disPhone#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disStatus">
+		             DIS_STATUS = #disStatus#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disPhoto">
+		             DIS_PHOTO = #disPhoto#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disGood">
+		             DIS_GOOD = #disGood#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disBad">
+		             DIS_BAD = #disBad#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbDiser.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_DISER <include refid="TbDiser.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbDiser.findPage" resultMap="RM.TbDiser">
+    	SELECT <include refid="TbDiser.columns"/> FROM TB_DISER 
+		<include refid="TbDiser.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	<select id="TbDiser.queryAll" resultMap="RM.TbDiser">
+        SELECT <include refid="TbDiser.columns"/> FROM TB_DISER
+    </select>
+
+	<update id="TbDiser.goodDiser" parameterClass="string">
+		UPDATE TB_DISER SET
+		DIS_GOOD = DIS_GOOD + 1
+		WHERE DIS_ID = #value#
+	</update>
+
+	<update id="TbDiser.badDiser" parameterClass="string">
+		UPDATE TB_DISER SET
+		DIS_BAD = DIS_BAD + 1
+		WHERE DIS_ID = #value#
+	</update>
+	
+</sqlMap>
+

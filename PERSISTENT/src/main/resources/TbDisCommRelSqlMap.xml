@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbDisCommRel" class="com.hxh.model.TbDisCommRel">
+        <result property="commId" column="COMM_ID"/>
+        <result property="disId" column="DIS_ID"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbDisCommRel.columns">
+	    <![CDATA[
+        	COMM_ID ,
+        	DIS_ID 
+	    ]]>
+	</sql>
+	
+    <insert id="TbDisCommRel.insert" >
+    <![CDATA[
+        INSERT INTO TB_DIS_COMM_REL (
+        	COMM_ID ,
+        	DIS_ID 
+        ) VALUES (
+        	#commId# ,
+        	#disId# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="" >
+            select last_insert_id()
+        </selectKey> -->
+    </insert>
+
+    <update id="TbDisCommRel.update" >
+    <![CDATA[
+        UPDATE TB_DIS_COMM_REL SET
+	        COMM_ID = #commId# ,
+	        DIS_ID = #disId# 
+        WHERE 
+    ]]>
+    </update>
+
+    <delete id="TbDisCommRel.delete">
+    <![CDATA[
+        DELETE FROM TB_DIS_COMM_REL WHERE
+    ]]>
+    </delete>
+
+    <delete id="TbDisCommRel.deleteByDisId">
+    <![CDATA[
+        DELETE FROM TB_DIS_COMM_REL WHERE DIS_ID = #disId#
+    ]]>
+    </delete>
+
+    <delete id="TbDisCommRel.delCommRel">
+    <![CDATA[
+        DELETE FROM TB_DIS_COMM_REL WHERE DIS_ID = #disId# and COMM_ID = #commId#
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbDisCommRel.getById" resultMap="RM.TbDisCommRel">
+	    SELECT <include refid="TbDisCommRel.columns"/>
+	    <![CDATA[
+	        FROM TB_DIS_COMM_REL 
+	        WHERE COMM_ID = #id#
+	    ]]>
+    </select>
+
+	<sql id="TbDisCommRel.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="commId">
+		             COMM_ID = #commId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="disId">
+		             DIS_ID = #disId#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbDisCommRel.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_DIS_COMM_REL <include refid="TbDisCommRel.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbDisCommRel.findPage" resultMap="RM.TbDisCommRel">
+    	SELECT <include refid="TbDisCommRel.columns"/> FROM TB_DIS_COMM_REL 
+		<include refid="TbDisCommRel.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	 <select id="TbDisCommRel.queryAll" resultMap="RM.TbDisCommRel">
+        SELECT <include refid="TbDisCommRel.columns"/> FROM TB_DIS_COMM_REL
+    </select>
+
+    <select id="TbDisCommRel.getByCommId" parameterClass="string" resultMap="RM.TbDisCommRel">
+        select rl.* from TB_DIS_COMM_REL rl LEFT JOIN TB_DISER ds
+        on rl.DIS_ID=ds.DIS_ID where rl.COMM_ID=#value# and ds.DIS_STATUS=1 LIMIT 0,1
+    </select>
+
+
+    <select id="TbDisCommRel.getByDisId" resultMap="RM.TbDisCommRel">
+        SELECT <include refid="TbDisCommRel.columns"/> FROM TB_DIS_COMM_REL where DIS_ID = #disId#
+    </select>
+
+    <insert id="TbDisCommRel.save" parameterClass="list">
+        INSERT INTO TB_DIS_COMM_REL (
+        	COMM_ID ,
+        	DIS_ID
+        ) VALUES
+        <iterate conjunction=",">
+            (#list[].commId#,#list[].disId#)
+        </iterate>
+    </insert>
+
+    <delete id="TbDisCommRel.deleteByCommId" parameterClass="string">
+        <![CDATA[
+        DELETE FROM TB_DIS_COMM_REL WHERE COMM_ID = #commId#
+        ]]>
+    </delete>
+
+</sqlMap>
+

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbUserAddress" class="com.hxh.model.TbUserAddress">
+        <result property="userId" column="USER_ID"/>
+        <result property="commId" column="COMM_ID"/>
+        <result property="commDetailId" column="COMM_DETAIL_ID"/>
+        <result property="addressId" column="ADDRESS_ID"/>
+        <result property="addressType" column="ADDRESS_TYPE"/>
+        <result property="addressDesc" column="ADDRESS_DESC"/>
+        <result property="addressStatus" column="ADDRESS_STATUS"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbUserAddress.columns">
+	    <![CDATA[
+        	USER_ID ,
+        	COMM_ID ,
+        	COMM_DETAIL_ID ,
+        	ADDRESS_ID ,
+        	ADDRESS_TYPE ,
+        	ADDRESS_DESC ,
+        	ADDRESS_STATUS 
+	    ]]>
+	</sql>
+	
+    <insert id="TbUserAddress.insert" >
+    <![CDATA[
+        INSERT INTO TB_USER_ADDRESS (
+        	USER_ID ,
+        	COMM_ID ,
+        	COMM_DETAIL_ID ,
+        	ADDRESS_ID ,
+        	ADDRESS_TYPE ,
+        	ADDRESS_DESC ,
+        	ADDRESS_STATUS ,
+        	ADDRESS_DATE
+        ) VALUES (
+        	#userId# ,
+        	#commId# ,
+        	#commDetailId# ,
+        	#addressId# ,
+        	#addressType# ,
+        	#addressDesc# ,
+        	#addressStatus# ,
+        	#addressDate#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="addressId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbUserAddress.update" >
+    <![CDATA[
+        UPDATE TB_USER_ADDRESS SET
+	        USER_ID = #userId# ,
+	        COMM_ID = #commId# ,
+	        COMM_DETAIL_ID = #commDetailId# ,
+	        ADDRESS_TYPE = #addressType# ,
+	        ADDRESS_DESC = #addressDesc# ,
+	        ADDRESS_STATUS = #addressStatus# 
+       WHERE ADDRESS_ID =  #addressId#
+    ]]>
+    </update>
+
+    <delete id="TbUserAddress.delete" parameterClass="string">
+    <![CDATA[
+        DELETE FROM TB_USER_ADDRESS WHERE ADDRESS_ID =  #value#
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbUserAddress.getById" resultMap="RM.TbUserAddress">
+	    SELECT <include refid="TbUserAddress.columns"/>
+	    <![CDATA[
+	        FROM TB_USER_ADDRESS 
+	        WHERE USER_ID =  #userId#
+	    ]]>
+    </select>
+
+	<sql id="TbUserAddress.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="userId">
+		             USER_ID = #userId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commId">
+		             COMM_ID = #commId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commDetailId">
+		             COMM_DETAIL_ID = #commDetailId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="addressId">
+		             ADDRESS_ID = #addressId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="addressType">
+		             ADDRESS_TYPE = #addressType#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="addressDesc">
+		             ADDRESS_DESC = #addressDesc#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="addressStatus">
+		             ADDRESS_STATUS = #addressStatus#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbUserAddress.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_USER_ADDRESS <include refid="TbUserAddress.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbUserAddress.findPage" resultMap="RM.TbUserAddress">
+    	SELECT <include refid="TbUserAddress.columns"/> FROM TB_USER_ADDRESS 
+		<include refid="TbUserAddress.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	 <select id="TbUserAddress.queryAll" resultMap="RM.TbUserAddress">
+        SELECT <include refid="TbUserAddress.columns"/> FROM TB_USER_ADDRESS
+    </select>
+
+
+	<select id="TbUserAddress.queryUserAddListByUserId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	select a.ADDRESS_ID,a.USER_ID,a.ADDRESS_TYPE,a.ADDRESS_DESC,a.ADDRESS_STATUS,b.COMM_ID,b.COMM_NAME,c.COMM_DETAIL_ID,c.COMM_DESC,d.REGIONAL_ID,d.REGIONAL_NAME from
+ 	TB_USER_ADDRESS a LEFT OUTER JOIN
+	TB_COMMUNITY b on a.COMM_ID = b.COMM_ID LEFT OUTER JOIN TB_COMM_DETAIL c
+	on a.COMM_DETAIL_ID = c.COMM_DETAIL_ID LEFT OUTER JOIN TB_REGIONAL d on b.REGIONAL_ID = d.REGIONAL_ID where a.USER_ID = #value#
+	ORDER BY a.ADDRESS_STATUS ASC,a.address_date DESC;
+	</select>
+
+	<select id="TbUserAddress.queryUserAddrList" resultClass="java.util.HashMap">
+		select a.ADDRESS_ID,a.USER_ID,a.ADDRESS_DESC,b.COMM_ID,b.COMM_NAME,c.COMM_DETAIL_ID,c.COMM_DESC,d.REGIONAL_ID,d.REGIONAL_NAME from
+		TB_USER_ADDRESS a LEFT OUTER JOIN
+		TB_COMMUNITY b on a.COMM_ID = b.COMM_ID LEFT OUTER JOIN TB_COMM_DETAIL c
+		on a.COMM_DETAIL_ID = c.COMM_DETAIL_ID LEFT OUTER JOIN TB_REGIONAL d on b.REGIONAL_ID = d.REGIONAL_ID
+		WHERE a.USER_ID = #userId# AND a.ADDRESS_TYPE=#addressType#
+	</select>
+
+
+	<select id="TbUserAddress.getDefaultUserAddByUserId" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select a.ADDRESS_ID,a.USER_ID,a.ADDRESS_DESC,b.COMM_ID,b.COMM_NAME,c.COMM_DETAIL_ID,c.COMM_DESC,d.REGIONAL_ID,d.REGIONAL_NAME from
+		TB_USER_ADDRESS a LEFT OUTER JOIN
+		TB_COMMUNITY b on a.COMM_ID = b.COMM_ID LEFT OUTER JOIN TB_COMM_DETAIL c
+		on a.COMM_DETAIL_ID = c.COMM_DETAIL_ID LEFT OUTER JOIN TB_REGIONAL d on b.REGIONAL_ID = d.REGIONAL_ID where ADDRESS_STATUS = 0 and  a.USER_ID = #value#;
+	</select>
+
+	<select id="TbUserAddress.getFullAddressById" parameterClass="java.lang.Integer" resultClass="java.util.HashMap">
+		select a.ADDRESS_ID,a.USER_ID,a.ADDRESS_DESC,b.COMM_ID,b.COMM_NAME,c.COMM_DETAIL_ID,c.COMM_DESC,d.REGIONAL_ID,d.REGIONAL_NAME from
+		TB_USER_ADDRESS a LEFT OUTER JOIN
+		TB_COMMUNITY b on a.COMM_ID = b.COMM_ID LEFT OUTER JOIN TB_COMM_DETAIL c
+		on a.COMM_DETAIL_ID = c.COMM_DETAIL_ID LEFT OUTER JOIN TB_REGIONAL d on b.REGIONAL_ID = d.REGIONAL_ID where a.ADDRESS_ID = #value#;
+	</select>
+
+
+	<update id="TbUserAddress.updateAllUserAddState">
+
+		update TB_USER_ADDRESS set ADDRESS_STATUS = 1 where USER_ID = #userId# AND ADDRESS_TYPE=#addressType#
+	</update>
+
+
+	<update id="TbUserAddress.updateUserAddState">
+		update TB_USER_ADDRESS set ADDRESS_STATUS = 0 where USER_ID = #userId# AND ADDRESS_ID = #addressId#
+	</update>
+
+	<select id="TbUserAddress.getNewUserAddressId" resultClass="string">
+		select ADDRESS_ID from TB_USER_ADDRESS where user_id = #userId# AND ADDRESS_TYPE=#addressType# order by address_date desc limit 0,1
+	</select>
+
+</sqlMap>
+

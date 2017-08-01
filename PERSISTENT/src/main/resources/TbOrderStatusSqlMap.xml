@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbOrderStatus" class="com.hxh.model.TbOrderStatus">
+		<result property="id" column="ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="statusId" column="STATUS_ID"/>
+        <result property="orderDesc" column="ORDER_DESC"/>
+        <result property="statusTime" column="STATUS_TIME"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbOrderStatus.columns">
+	    <![CDATA[
+			ID,
+        	ORDER_ID ,
+        	STATUS_ID ,
+        	ORDER_DESC ,
+        	STATUS_TIME 
+	    ]]>
+	</sql>
+	
+    <insert id="TbOrderStatus.insert" >
+    <![CDATA[
+        INSERT INTO TB_ORDER_STATUS (
+        	ID,
+        	ORDER_ID ,
+        	STATUS_ID ,
+        	ORDER_DESC ,
+        	STATUS_TIME 
+        ) VALUES (
+        	#id#,
+        	#orderId# ,
+        	#statusId# ,
+        	#orderDesc# ,
+        	#statusTime# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbOrderStatus.update" >
+    <![CDATA[
+        UPDATE TB_ORDER_STATUS SET
+	        ORDER_ID = #orderId# ,
+	        STATUS_ID = #statusId# ,
+	        ORDER_DESC = #orderDesc# ,
+	        STATUS_TIME = #statusTime# 
+        WHERE ID = #id#
+    ]]>
+    </update>
+
+    <delete id="TbOrderStatus.delete">
+    <![CDATA[
+        DELETE FROM TB_ORDER_STATUS WHERE ID= #value#
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbOrderStatus.getById" resultMap="RM.TbOrderStatus">
+	    SELECT <include refid="TbOrderStatus.columns"/>
+	    <![CDATA[
+	        FROM TB_ORDER_STATUS 
+	        WHERE ID = #value#
+	    ]]>
+    </select>
+
+	<sql id="TbOrderStatus.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="orderId">
+		             ORDER_ID = #orderId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="statusId">
+		             STATUS_ID = #statusId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="orderDesc">
+		             ORDER_DESC = #orderDesc#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="statusTime">
+		             STATUS_TIME = #statusTime#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbOrderStatus.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_ORDER_STATUS <include refid="TbOrderStatus.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbOrderStatus.findPage" resultMap="RM.TbOrderStatus">
+    	SELECT <include refid="TbOrderStatus.columns"/> FROM TB_ORDER_STATUS 
+		<include refid="TbOrderStatus.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	<select id="TbOrderStatus.queryAll" resultMap="RM.TbOrderStatus">
+        SELECT <include refid="TbOrderStatus.columns"/> FROM TB_ORDER_STATUS
+    </select>
+
+	<select id="TbOrderStatus.queryStatusListByOrderId" parameterClass="string" resultClass="java.util.HashMap">
+		SELECT a.STATUS_TIME as statusTime, b.STATUS_NAME as statusName ,a.ORDER_DESC as statusDesc ,a.ID as id FROM TB_ORDER_STATUS a LEFT OUTER JOIN TB_ORDER_STATUS_CUST b on a.STATUS_ID = b.STATUS_ID
+		WHERE a.ORDER_ID=#value# ORDER BY a.STATUS_TIME DESC
+	</select>
+	
+</sqlMap>
+

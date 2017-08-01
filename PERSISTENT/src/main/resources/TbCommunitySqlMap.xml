@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbCommunity" class="com.hxh.model.TbCommunity">
+        <result property="commId" column="COMM_ID"/>
+        <result property="regionalId" column="REGIONAL_ID"/>
+        <result property="commName" column="COMM_NAME"/>
+        <result property="commDesc" column="COMM_DESC"/>
+		<result property="commLatitude" column="COMM_LATITUDE"/>
+		<result property="commLongitud" column="COMM_LONGITUD"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbCommunity.columns">
+	    <![CDATA[
+        	COMM_ID ,
+        	REGIONAL_ID ,
+        	COMM_NAME ,
+        	COMM_DESC ,
+        	COMM_LATITUDE,
+        	COMM_LONGITUD
+	    ]]>
+	</sql>
+	
+    <insert id="TbCommunity.insert" >
+    <![CDATA[
+        INSERT INTO TB_COMMUNITY (
+        	REGIONAL_ID ,
+        	COMM_NAME ,
+        	COMM_DESC ,
+        	COMM_LATITUDE,
+        	COMM_LONGITUD
+        ) VALUES (
+        	#regionalId# ,
+        	#commName# ,
+        	#commDesc# ,
+        	#commLatitude#,
+        	#commLongitud#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="commId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbCommunity.update" >
+    <![CDATA[
+        UPDATE TB_COMMUNITY SET
+	        REGIONAL_ID = #regionalId# ,
+	        COMM_NAME = #commName# ,
+	        COMM_DESC = #commDesc# ,
+	        COMM_LATITUDE = #commLatitude# ,
+	        COMM_LONGITUD = #commLongitud#
+        WHERE
+	        COMM_ID = #commId# 
+    ]]>
+    </update>
+
+    <delete id="TbCommunity.delete">
+    <![CDATA[
+        DELETE FROM TB_COMMUNITY WHERE
+        COMM_ID = #commId# 
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbCommunity.getById" resultMap="RM.TbCommunity">
+	    SELECT <include refid="TbCommunity.columns"/>
+	    <![CDATA[
+	        FROM TB_COMMUNITY
+	        WHERE
+		        COMM_ID = #commId#
+	    ]]>
+    </select>
+
+	<select id="TbCommunity.getCommunityById" parameterClass="string" resultClass="hashmap">
+		SELECT pro.REGIONAL_NAME province, pro.REGIONAL_ID provinceId , cty.REGIONAL_NAME city, cty.REGIONAL_ID cityId, dis.REGIONAL_NAME district, comm.COMM_ID commId,
+		comm.REGIONAL_ID regionalId, comm.COMM_NAME commName, comm.COMM_DESC commDesc, comm.COMM_LATITUDE commLatitude,
+		comm.COMM_LONGITUD commLongitud FROM
+		TB_COMMUNITY comm LEFT JOIN TB_REGIONAL dis ON comm.REGIONAL_ID = dis.REGIONAL_ID
+		LEFT JOIN TB_REGIONAL cty ON dis.REGIONAL_PARENT = cty.REGIONAL_ID
+		LEFT JOIN TB_REGIONAL pro ON cty.REGIONAL_PARENT = pro.REGIONAL_ID
+		WHERE
+		comm.COMM_ID = #commId#
+	</select>
+
+	<sql id="TbCommunity.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="commId">
+		             COMM_ID = #commId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="regionalId">
+		             REGIONAL_ID = #regionalId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commName">
+		             COMM_NAME = #commName#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commDesc">
+		             COMM_DESC = #commDesc#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbCommunity.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_COMMUNITY <include refid="TbCommunity.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbCommunity.findPage" resultMap="RM.TbCommunity">
+    	SELECT <include refid="TbCommunity.columns"/> FROM TB_COMMUNITY 
+		<include refid="TbCommunity.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+	<select id="TbCommunity.queryAll" resultMap="RM.TbCommunity">
+        SELECT <include refid="TbCommunity.columns"/> FROM TB_COMMUNITY
+    </select>
+
+	<select id="TbCommunity.queryRegComm" resultMap="RM.TbCommunity">
+		SELECT <include refid="TbCommunity.columns"/> FROM TB_COMMUNITY
+		WHERE REGIONAL_ID = #regionalId#
+		<isNotEmpty property="commName" prepend="and">
+			COMM_NAME LIKE CONCAT('%',#commName#,'%')
+		</isNotEmpty>
+	</select>
+
+	<select id="TbCommunity.queryNearComm" parameterClass="hashmap" resultClass="java.util.HashMap">
+		SELECT pro.REGIONAL_NAME province, cty.REGIONAL_NAME city, dis.REGIONAL_NAME district, comm.comm_name, comm.COMM_ID FROM
+		TB_COMMUNITY comm LEFT JOIN TB_REGIONAL dis ON comm.REGIONAL_ID = dis.REGIONAL_ID
+		LEFT JOIN TB_REGIONAL cty ON dis.REGIONAL_PARENT = cty.REGIONAL_ID
+		LEFT JOIN TB_REGIONAL pro ON cty.REGIONAL_PARENT = pro.REGIONAL_ID
+		where comm.COMM_LATITUDE &lt;&gt; 0
+		and comm.COMM_LONGITUD &gt; #minLng#
+		and comm.COMM_LONGITUD &lt; #maxLng#
+		and comm.COMM_LATITUDE &gt; #minLat#
+		and comm.COMM_LATITUDE &lt; #maxLat#
+		order by ACOS(SIN((#latitude# * 3.1415) / 180 ) * SIN((comm.COMM_LATITUDE * 3.1415) / 180 )
+		+COS((#latitude# * 3.1415) / 180 ) * COS((comm.COMM_LATITUDE * 3.1415) / 180 )
+		*COS((#longitude# * 3.1415) / 180 - (comm.COMM_LONGITUD * 3.1415) / 180 ) )
+		* 6380 asc
+	</select>
+
+
+	<select id="TbCommunity.queryFullComm" parameterClass="map" resultClass="java.util.HashMap">
+		SELECT pro.REGIONAL_NAME province, pro.REGIONAL_ID provinceId , cty.REGIONAL_NAME city, cty.REGIONAL_ID cityId, dis.REGIONAL_NAME district, comm.COMM_ID commId,
+				comm.REGIONAL_ID regionalId, comm.COMM_NAME commName, comm.COMM_DESC commDesc, comm.COMM_LATITUDE commLatitude,
+				comm.COMM_LONGITUD commLongitud,group_concat(tdis.DIS_NAME) disNames,group_concat(conv(oct(tdis.DIS_ID),8,10)) disIds FROM
+		TB_COMMUNITY comm LEFT JOIN TB_REGIONAL dis ON comm.REGIONAL_ID = dis.REGIONAL_ID
+		LEFT JOIN TB_REGIONAL cty ON dis.REGIONAL_PARENT = cty.REGIONAL_ID
+		LEFT JOIN TB_REGIONAL pro ON cty.REGIONAL_PARENT = pro.REGIONAL_ID
+		LEFT JOIN TB_DIS_COMM_REL disr ON disr.COMM_ID = comm.COMM_ID
+		LEFT JOIN TB_DISER tdis ON tdis.DIS_ID = disr.DIS_ID
+		where 1=1
+		<isNotEmpty property="searchName">
+			AND comm.comm_name LIKE CONCAT('%',#searchName#,'%') OR cty.REGIONAL_NAME LIKE CONCAT('%',#searchName#,'%')
+			OR dis.REGIONAL_NAME LIKE CONCAT('%',#searchName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="province">
+			AND pro.REGIONAL_ID = #province#
+		</isNotEmpty>
+		<isNotEmpty property="city">
+			AND cty.REGIONAL_ID = #city#
+		</isNotEmpty>
+		<isNotEmpty property="district">
+			AND dis.REGIONAL_ID = #district#
+		</isNotEmpty>
+		<isNotEmpty property="commName">
+			AND comm.comm_name LIKE CONCAT('%',#commName#,'%')
+		</isNotEmpty>
+		group by comm.COMM_ID
+
+	</select>
+
+</sqlMap>
+

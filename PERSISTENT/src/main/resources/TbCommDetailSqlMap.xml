@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbCommDetail" class="com.hxh.model.TbCommDetail">
+        <result property="commId" column="COMM_ID"/>
+        <result property="commDetailId" column="COMM_DETAIL_ID"/>
+        <result property="commDesc" column="COMM_DESC"/>
+        <result property="commStatus" column="COMM_STATUS"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbCommDetail.columns">
+	    <![CDATA[
+        	COMM_ID ,
+        	COMM_DETAIL_ID ,
+        	COMM_DESC ,
+        	COMM_STATUS 
+	    ]]>
+	</sql>
+	
+    <insert id="TbCommDetail.insert" >
+    <![CDATA[
+        INSERT INTO TB_COMM_DETAIL (
+        	COMM_ID ,
+        	COMM_DETAIL_ID ,
+        	COMM_DESC ,
+        	COMM_STATUS 
+        ) VALUES (
+        	#commId# ,
+        	#commDetailId# ,
+        	#commDesc# ,
+        	#commStatus# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="commDetailId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbCommDetail.update" >
+    <![CDATA[
+        UPDATE TB_COMM_DETAIL SET
+	        COMM_ID = #commId# ,
+	        COMM_DESC = #commDesc# ,
+	        COMM_STATUS = #commStatus# 
+        WHERE 
+	        COMM_DETAIL_ID = #commDetailId# 
+    ]]>
+    </update>
+
+    <delete id="TbCommDetail.delete">
+    <![CDATA[
+        DELETE FROM TB_COMM_DETAIL WHERE
+        COMM_DETAIL_ID = #commDetailId# 
+    ]]>
+    </delete>
+
+	<delete id="TbCommDetail.deleteByCommId">
+		<![CDATA[
+        DELETE FROM TB_COMM_DETAIL WHERE
+        COMM_ID = #commId#
+    ]]>
+	</delete>
+
+    <select id="TbCommDetail.getById" resultMap="RM.TbCommDetail">
+	    SELECT <include refid="TbCommDetail.columns"/>
+	    <![CDATA[
+	        FROM TB_COMM_DETAIL 
+	        WHERE 
+		        COMM_DETAIL_ID = #commDetailId# 
+	    ]]>
+    </select>
+
+	<sql id="TbCommDetail.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="commId">
+		             COMM_ID = #commId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commDetailId">
+		             COMM_DETAIL_ID = #commDetailId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commDesc">
+		             COMM_DESC = #commDesc#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="commStatus">
+		             COMM_STATUS = #commStatus#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbCommDetail.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_COMM_DETAIL <include refid="TbCommDetail.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbCommDetail.findPage" resultMap="RM.TbCommDetail">
+    	SELECT <include refid="TbCommDetail.columns"/> FROM TB_COMM_DETAIL 
+		<include refid="TbCommDetail.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+	 <select id="TbCommDetail.queryAll" resultMap="RM.TbCommDetail">
+		 SELECT <include refid="TbCommDetail.columns"/> FROM TB_COMM_DETAIL
+	 </select>
+
+	<select id="TbCommDetail.queryCommDetailByCommId" parameterClass="int" resultMap="RM.TbCommDetail">
+		SELECT <include refid="TbCommDetail.columns"/> FROM TB_COMM_DETAIL
+		WHERE COMM_ID=#commId#
+	</select>
+
+	<select id="TbCommDetail.queryCommDetail" resultMap="RM.TbCommDetail">
+		SELECT <include refid="TbCommDetail.columns"/> FROM TB_COMM_DETAIL
+		WHERE COMM_ID=#commId#
+		<isNotEmpty property="commDesc" prepend="and">
+			COMM_DESC LIKE CONCAT('%',#commDesc#,'%')
+		</isNotEmpty>
+	</select>
+
+	<select id="TbCommDetail.getIds" resultClass="string">
+		SELECT COMM_DETAIL_ID FROM TB_COMM_DETAIL
+	</select>
+	
+</sqlMap>
+

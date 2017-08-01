@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbProductType" class="com.hxh.model.TbProductType">
+        <result property="typeId" column="TYPE_ID"/>
+        <result property="typeName" column="TYPE_NAME"/>
+        <result property="typeParent" column="TYPE_PARENT"/>
+        <result property="typeStatus" column="TYPE_STATUS"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbProductType.columns">
+	    <![CDATA[
+        	TYPE_ID ,
+        	TYPE_NAME ,
+        	TYPE_PARENT ,
+        	TYPE_STATUS 
+	    ]]>
+	</sql>
+	
+    <insert id="TbProductType.insert" >
+    <![CDATA[
+        INSERT INTO TB_PRODUCT_TYPE (
+        	TYPE_ID ,
+        	TYPE_NAME ,
+        	TYPE_PARENT ,
+        	TYPE_STATUS 
+        ) VALUES (
+        	#typeId# ,
+        	#typeName# ,
+        	#typeParent# ,
+        	#typeStatus# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="typeId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbProductType.update" >
+    <![CDATA[
+        UPDATE TB_PRODUCT_TYPE SET
+	        TYPE_NAME = #typeName# ,
+	        TYPE_PARENT = #typeParent# ,
+	        TYPE_STATUS = #typeStatus# 
+        WHERE 
+	        TYPE_ID = #typeId# 
+    ]]>
+    </update>
+
+    <delete id="TbProductType.delete">
+    <![CDATA[
+        DELETE FROM TB_PRODUCT_TYPE WHERE
+        TYPE_ID = #typeId# 
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbProductType.getById" resultMap="RM.TbProductType">
+	    SELECT <include refid="TbProductType.columns"/>
+	    <![CDATA[
+	        FROM TB_PRODUCT_TYPE 
+	        WHERE 
+		        TYPE_ID = #typeId# 
+	    ]]>
+    </select>
+
+	<sql id="TbProductType.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="typeId">
+		             TYPE_ID = #typeId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="typeName">
+		             TYPE_NAME = #typeName#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="typeParent">
+		             TYPE_PARENT = #typeParent#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="typeStatus">
+		             TYPE_STATUS = #typeStatus#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbProductType.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_PRODUCT_TYPE <include refid="TbProductType.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbProductType.findPage" resultMap="RM.TbProductType">
+    	SELECT <include refid="TbProductType.columns"/> FROM TB_PRODUCT_TYPE 
+		<include refid="TbProductType.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	 <select id="TbProductType.queryAll" resultMap="RM.TbProductType">
+        SELECT <include refid="TbProductType.columns"/> FROM TB_PRODUCT_TYPE
+    </select>
+	
+</sqlMap>
+

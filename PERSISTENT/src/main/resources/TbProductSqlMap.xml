@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbProduct" class="com.hxh.model.TbProduct">
+        <result property="proId" column="PRO_ID"/>
+        <result property="typeId" column="TYPE_ID"/>
+        <result property="proName" column="PRO_NAME"/>
+        <result property="proRealprice" column="PRO_REALPRICE"/>
+        <result property="proPrice" column="PRO_PRICE"/>
+        <result property="proImg" column="PRO_IMG"/>
+        <result property="proStatus" column="PRO_STATUS"/>
+		<result property="proUnit" column="PRO_UNIT"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbProduct.columns">
+	    <![CDATA[
+        	PRO_ID ,
+        	TYPE_ID ,
+        	PRO_NAME ,
+        	PRO_REALPRICE ,
+        	PRO_PRICE ,
+        	PRO_IMG ,
+        	PRO_STATUS,
+        	PRO_UNIT
+	    ]]>
+	</sql>
+	
+    <insert id="TbProduct.insert" >
+    <![CDATA[
+        INSERT INTO TB_PRODUCT (
+        	PRO_ID ,
+        	TYPE_ID ,
+        	PRO_NAME ,
+        	PRO_REALPRICE ,
+        	PRO_PRICE ,
+        	PRO_IMG ,
+        	PRO_STATUS,
+        	PRO_UNIT
+        ) VALUES (
+        	#proId# ,
+        	#typeId# ,
+        	#proName# ,
+        	#proRealprice# ,
+        	#proPrice# ,
+        	#proImg# ,
+        	#proStatus#,
+        	#proUnit#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="proId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbProduct.update" >
+    <![CDATA[
+        UPDATE TB_PRODUCT SET
+	        TYPE_ID = #typeId# ,
+	        PRO_NAME = #proName# ,
+	        PRO_REALPRICE = #proRealprice# ,
+	        PRO_PRICE = #proPrice# ,
+	        PRO_IMG = #proImg# ,
+	        PRO_STATUS = #proStatus#,
+	         PRO_UNIT =#proUnit#
+
+        WHERE 
+	        PRO_ID = #proId# 
+    ]]>
+    </update>
+
+    <delete id="TbProduct.delete">
+    <![CDATA[
+        DELETE FROM TB_PRODUCT WHERE
+        PRO_ID = #proId# 
+    ]]>
+    </delete>
+
+
+    
+    <select id="TbProduct.getById" resultMap="RM.TbProduct">
+	    SELECT <include refid="TbProduct.columns"/>
+	    <![CDATA[
+	        FROM TB_PRODUCT 
+	        WHERE 
+		        PRO_ID = #proId# 
+	    ]]>
+    </select>
+
+	<sql id="TbProduct.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="proId">
+		             PRO_ID = #proId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="typeId">
+		             TYPE_ID = #typeId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="proName">
+		             PRO_NAME = #proName#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="proRealprice">
+		             PRO_REALPRICE = #proRealprice#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="proPrice">
+		             PRO_PRICE = #proPrice#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="proImg">
+		             PRO_IMG = #proImg#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="proStatus">
+		             PRO_STATUS = #proStatus#
+		       </isNotEmpty>
+			<isNotEmpty prepend="AND" property="proStatus">
+				PRO_UNIT = #proUnit#
+			</isNotEmpty>
+	    </dynamic>	
+	</sql>
+	 
+    <select id="TbProduct.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_PRODUCT <include refid="TbProduct.findPage.where"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbProduct.findPage" resultMap="RM.TbProduct">
+    	SELECT <include refid="TbProduct.columns"/> FROM TB_PRODUCT 
+		<include refid="TbProduct.findPage.where"/>
+		<dynamic prepend="ORDER BY">
+			<isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+		</dynamic>
+    </select>
+
+
+
+	 <select id="TbProduct.queryAll" resultMap="RM.TbProduct">
+        SELECT <include refid="TbProduct.columns"/> FROM TB_PRODUCT
+    </select>
+
+
+
+	<select id="TbProduct.getPriceList" resultClass="java.util.HashMap">
+	select CONCAT('1',a.TYPE_ID) as UUID,a.PRO_UNIT as proUnit,a.TYPE_ID as ID,a.TYPE_NAME,null as P_ID,1 as CLASS,null as PRICE from TB_PRODUCT_TYPE a union select CONCAT('2',b.PRO_ID),b.PRO_ID,b.PRO_NAME,b.TYPE_ID,2,b.PRO_PRICE  from TB_PRODUCT b union select CONCAT('3',c.ATTR_ID),c.ATTR_ID,c.ATTR_NAME,c.PRO_ID,3,c.PRICE from TB_PRODUCT_ATTR c
+	</select>
+
+
+
+
+
+	<select id="TbProduct.manageProList" resultClass="java.util.HashMap">
+
+		select a.PRO_ID,a.PRO_UNIT , a.PRO_NAME,b.TYPE_NAME,a.PRO_IMG,a.PRO_PRICE,a.PRO_REALPRICE,a.PRO_STATUS from TB_PRODUCT a left outer join TB_PRODUCT_TYPE b on a.TYPE_ID = b.TYPE_ID
+		order by a.PRO_ID asc
+
+	</select>
+
+
+	<select id="TbProduct.queryAllProType" resultClass="java.util.HashMap">
+
+		select * FROM TB_PRODUCT_TYPE;
+
+
+	</select>
+
+
+	<select id="TbProduct.queryProductByCondition" resultClass="java.util.HashMap">
+
+		select a.PRO_ID,a.PRO_UNIT , a.PRO_NAME,b.TYPE_NAME,a.PRO_IMG,a.PRO_PRICE,a.PRO_REALPRICE,a.PRO_STATUS from TB_PRODUCT a left outer join TB_PRODUCT_TYPE b on a.TYPE_ID = b.TYPE_ID
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="typeId" >
+			   a.TYPE_ID = #typeId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="proName"  >
+				<![CDATA[     a.PRO_NAME like concat('%', #proName#, '%')  ]]>
+			</isNotEmpty>
+
+		</dynamic>
+		order by a.PRO_ID desc
+
+	</select>
+
+
+
+	<select id="TbProduct.queryProAttrByProId" resultClass="com.hxh.model.TbProductAttr">
+			select ATTR_ID as attrId,ATTR_NAME as attrName,PRO_ID as proId from TB_PRODUCT_ATTR where PRO_ID = #value# order by ATTR_ID asc
+
+
+
+	</select>
+
+
+	<insert id="TbProduct.insertProAttr" >
+		<![CDATA[
+        INSERT INTO TB_PRODUCT_ATTR (
+        	ATTR_ID ,
+        	ATTR_NAME ,
+        	PRO_ID
+        ) VALUES (
+        	#attrId# ,
+        	#attrName# ,
+        	#proId#
+        )
+    ]]>
+		<!--
+        mysql:		type="post" SELECT  select last_insert_id()
+        sqlserver:	type="post" SELECT  @@identity  AS  ID
+        oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+        DB2:		type="pre"	values nextval for sequenceName
+        -->
+		<selectKey resultClass="java.lang.Integer" type="post" keyProperty="attrId" >
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+
+	<update id="TbProduct.updateProAttr" >
+		<![CDATA[
+        UPDATE TB_PRODUCT_ATTR SET
+	        ATTR_NAME = #attrName#
+        WHERE
+	        ATTR_ID = #attrId#
+    ]]>
+	</update>
+
+
+
+	<delete id="TbProduct.deleteProAttr" >
+		 <![CDATA[
+        DELETE FROM TB_PRODUCT_ATTR WHERE
+        ATTR_ID = #value#
+    ]]>
+
+	</delete>
+
+
+
+
+
+
+	<select id="TbProduct.queryAttrById" resultClass="com.hxh.model.TbProductAttr">
+		select ATTR_ID as attrId,ATTR_NAME as attrName,PRO_ID as proId from TB_PRODUCT_ATTR where ATTR_ID = #value#
+
+	</select>
+
+
+</sqlMap>
+

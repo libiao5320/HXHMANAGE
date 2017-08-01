@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings
+            cacheModelsEnabled="true"
+            enhancementEnabled="true"
+            lazyLoadingEnabled="true"
+            errorTracingEnabled="true"
+            maxRequests="32"
+            maxSessions="10"
+            maxTransactions="5"
+            useStatementNamespaces="true"
+            ></settings>
+
+
+    <sqlMap resource="TbOrderSqlMap.xml"/>
+    <sqlMap resource="TbDiserSqlMap.xml"/>
+    <sqlMap resource="TbOrderProRelSqlMap.xml"/>
+    <sqlMap resource="TbOrderStatusSqlMap.xml"/>
+    <sqlMap resource="TbUserSqlMap.xml"/>
+    <sqlMap resource="TbUserAccountSqlMap.xml"/>
+    <sqlMap resource="TbUserAddressSqlMap.xml"/>
+    <sqlMap resource="TbUserExtSqlMap.xml"/>
+    <sqlMap resource="TbCommDetailSqlMap.xml"/>
+    <sqlMap resource="TbDisCommRelSqlMap.xml"/>
+    <sqlMap resource="TbCommunitySqlMap.xml"/>
+    <sqlMap resource="TbRegionalSqlMap.xml"/>
+    <sqlMap resource="TbProductSqlMap.xml"/>
+    <sqlMap resource="TbProductTypeSqlMap.xml"/>
+
+
+</sqlMapConfig>

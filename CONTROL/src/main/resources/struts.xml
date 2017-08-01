@@ -1,0 +1,68 @@
+﻿<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+        <constant name="struts.i18n.encoding" value="UTF-8"></constant>
+        <!-- 配置全局拦截器 -->
+        <package name="all" extends="struts-default">
+            <!--<interceptors>-->
+                <!--&lt;!&ndash; 定义权限控制拦截器 &ndash;&gt;-->
+                <!--<interceptor name="authority" class="com.emc.action.LoginInterceptor" />-->
+                <!--&lt;!&ndash; 定义一个包含权限控制的拦截器栈 &ndash;&gt;-->
+                <!--<interceptor-stack name="mydefault">-->
+                    <!--<interceptor-ref name="defaultStack" />-->
+                    <!--<interceptor-ref name="authority" />-->
+                <!--</interceptor-stack>-->
+            <!--</interceptors>-->
+            <!-- 定义默认拦截器 -->
+            <!--<default-interceptor-ref name="mydefault" />-->
+            <!-- 定义全局处理结果 -->
+            <global-results>
+                <!-- 逻辑名为login的结果，映射到/login.jsp页面 -->
+                <result name="index"></result>
+            </global-results>
+        </package>
+
+        <!-- struts2的action必须放在一个指定的包空间下定义 -->
+        <package name="default" extends="all">
+            <action name="indexAction" class="com.hxh.action.IndexAction">
+                <result name="registed">
+                    order/order.html
+                </result>
+                <result name="notReg">
+                    user/register.html
+                </result>
+                <result name="pageFlag">${pageFlag}</result>
+            </action>
+            <action name="orderAction" class="com.hxh.action.OrderAction">
+
+            </action>
+            <action name="communityAction" class="com.hxh.action.CommunityAction">
+
+            </action>
+            <action name="commDetailAction" class="com.hxh.action.CommDetailAction">
+
+            </action>
+            <action name="regionalAction" class="com.hxh.action.RegionalAction">
+
+            </action>
+            <action name="diserAction" class="com.hxh.action.DiserAction">
+
+            </action>
+
+
+            <action name="productAction" class="com.hxh.action.ProductAction">
+
+            </action>
+            <action name="userAction" class="com.hxh.action.UserAction">
+
+            </action>
+            <action name="userAccountAction" class="com.hxh.action.UserAccountAction">
+
+            </action>
+            <action name="userAddressAction" class="com.hxh.action.UserAddressAction">
+
+            </action>
+
+         </package>
+</struts>

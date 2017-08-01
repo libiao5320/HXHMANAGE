@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+<!-- BEGIN HEAD -->
+
+<head>
+    <base href="/hxhmanage/"/>
+    <meta charset="utf-8" />
+
+    <title>好洗欢管理平台</title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <meta content="" name="description" />
+
+    <meta content="" name="author" />
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+
+    <link href="css/vendor/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/vendor/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/vendor/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/vendor/style-metro.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/vendor/style.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/vendor/style-responsive.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/vendor/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+
+    <link href="css/vendor/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="css/vendor/multi-select-metro.css">
+
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!-- BEGIN PAGE LEVEL STYLES -->
+
+    <link rel="stylesheet" type="text/css" href="css/vendor/select2_metro.css" />
+
+    <link rel="stylesheet" href="css/vendor/DT_bootstrap.css" />
+
+    <!-- END PAGE LEVEL STYLES -->
+
+    <link rel="shortcut icon" href="images/logo.png" />
+
+</head>
+<body class="page-header-fixed page-sidebar-closed">
+<!-- BEGIN HEADER -->
+
+<!--
+<div id="addDiserRel" class="modal hide fade" tabindex="-1" data-width="760">
+
+    <form id="diserForm" class="form-horizontal"  action="//jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="disId">
+        <input type="hidden" name="workNum">
+        <div class="modal-header">
+            <button  type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h3>关联小区</h3>
+        </div>
+  &lt;!&ndash;      <div style="float: left;">
+            <label class="control-label">市</label>
+            <div class="controls">
+
+                <select id="city" class="small m-wrap" tabindex="1">
+                    <option value=""></option>
+                    <option value="2">长沙市</option>
+                </select>
+
+            </div>
+
+        </div>&ndash;&gt;
+        <div  class="control-group">
+            <label id="commList" class="control-label">小区</label>
+        </div>
+
+
+
+        <div class="modal-footer">
+            &lt;!&ndash;<button id="queryCommBtn" type="button">查询</button>&ndash;&gt;
+
+            <button type="button" data-dismiss="modal" class="btn">关闭</button>
+
+            <button id="relCommBtn" type="button" class="btn blue"><i class="icon-ok"></i> 保存</button>
+
+        </div>
+
+    </form>
+
+</div>
+-->
+
+
+<div id="addDiserRel" class="modal hide fade" tabindex="-1" data-width="760">
+
+</div>
+<div class="header navbar navbar-inverse navbar-fixed-top">
+
+    <!-- BEGIN TOP NAVIGATION BAR -->
+
+    <div class="navbar-inner">
+
+        <div class="container-fluid">
+
+            <!-- BEGIN LOGO -->
+
+            <a class="brand" href="index.html" style="padding:0px;">
+
+                <img src="images/logo.png" alt="logo" />
+
+            </a>
+
+            <!-- END LOGO -->
+
+            <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+
+            <a href="javascript:;" class="btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+
+                <img src="images/menu-toggler.png" alt="" />
+
+            </a>
+
+            <!-- END RESPONSIVE MENU TOGGLER -->
+
+            <!-- BEGIN TOP NAVIGATION MENU -->
+
+
+
+            <!-- END TOP NAVIGATION MENU -->
+
+        </div>
+
+    </div>
+
+    <!-- END TOP NAVIGATION BAR -->
+
+</div>
+<!-- BEGIN CONTAINER -->
+
+
+
+<div class="page-container row-fluid">
+
+    <!-- BEGIN SIDEBAR -->
+
+    <div class="page-sidebar nav-collapse collapse">
+
+        <!-- BEGIN SIDEBAR MENU -->
+
+        <ul class="page-sidebar-menu">
+
+            <li>
+
+                <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+
+                <div class="sidebar-toggler hidden-phone"></div>
+
+                <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+
+            </li>
+
+
+
+            <li>
+
+                <a href="indexAction!setStrutsPage.action?pageFlag=order/ordermana.html">
+
+                    <i class="icon-file-text"></i>
+
+                    <span class="title">订单管理</span>
+
+                </a>
+
+            </li>
+            <li >
+
+                <a href="indexAction!setStrutsPage.action?pageFlag=community/communityList.html">
+
+                    <i class="icon-home"></i>
+
+                    <span class="title">地址管理</span>
+
+                </a>
+
+            </li>
+
+            <li class="active ">
+
+                <a href="indexAction!setStrutsPage.action?pageFlag=diser/disermana.html">
+
+                    <i class="icon-user-md"></i>
+
+                    <span class="title">配送人员管理</span>
+
+                </a>
+
+            </li>
+
+            <li >
+
+                <a href="indexAction!setStrutsPage.action?pageFlag=pro/product.html">
+
+                    <i class="icon-barcode"></i>
+
+                    <span class="title">产品管理</span>
+
+                </a>
+
+            </li>
+   
+
+        </ul>
+
+        <!-- END SIDEBAR MENU -->
+
+    </div>
+
+    <!-- END SIDEBAR -->
+
+    <!-- BEGIN PAGE -->
+
+    <div class="page-content">
+
+        <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+        <div id="portlet-config" class="modal hide">
+
+            <div class="modal-header">
+
+                <button data-dismiss="modal" class="close" type="button"></button>
+
+                <h3>portlet Settings</h3>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>Here will be a configuration form</p>
+
+            </div>
+
+        </div>
+
+        <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
+        <!-- BEGIN PAGE CONTAINER-->
+
+        <div class="container-fluid">
+
+            <!-- BEGIN PAGE HEADER-->
+
+            <div class="row-fluid">
+
+                <div class="span12">
+
+
+                </div>
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+            <!-- BEGIN PAGE CONTENT-->
+
+            <div class="row-fluid">
+
+                <div class="span12">
+
+                    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+                    <div class="portlet box light-grey">
+
+                        <div class="portlet-title">
+
+                            <div class="caption"><i class="icon-globe"></i>配送人员-小区管理</div>
+
+                            <div class="tools">
+
+                                <a href="javascript:;" class="collapse"></a>
+
+                                <!--<a href="#portlet-config" data-toggle="modal" class="config"></a>-->
+
+                                <!--<a href="javascript:;" class="reload"></a>-->
+
+                                <!--<a href="javascript:;" class="remove"></a>-->
+
+                            </div>
+
+                        </div>
+
+                        <div class="portlet-body">
+
+                            <div class="btn-group" style="font-size: 15px;">
+
+                                <a class="btn blue" data-toggle="modal" id="queryCommBtn">关联<i class="icon-plus"></i></a>
+
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover" id="sample_1">
+
+                                <thead>
+
+                                <tr>
+
+                                    <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 div span .checkboxes" /></th>
+
+                                    <th class="hidden-480">城市</th>
+
+                                    <th class="hidden-480">小区</th>
+
+                                    <th class="hidden-480">操作</th>
+                      <!--              <th class="hidden-480">Edit</th>
+                                    <th class="hidden-480">Delete</th>
+-->
+                                    <!--<th ></th>-->
+
+                                </tr>
+
+                                </thead>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <!-- END EXAMPLE TABLE PORTLET-->
+
+                </div>
+
+            </div>
+
+
+
+            <!-- END PAGE CONTENT-->
+
+        </div>
+
+        <!-- END PAGE CONTAINER-->
+
+    </div>
+
+    <!-- END PAGE -->
+
+</div>
+
+<!-- BEGIN FOOTER -->
+
+<div class="footer">
+
+    <div class="footer-inner">
+
+
+
+    </div>
+
+    <div class="footer-tools">
+
+			<span class="go-top">
+
+			<i class="icon-angle-up"></i>
+
+			</span>
+
+    </div>
+
+</div>
+
+
+
+<!-- END FOOTER -->
+
+<!-- END CONTAINER -->
+
+
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+
+<!-- BEGIN CORE PLUGINS -->
+
+<script src="js/vendor/jquery-1.10.1.min.js" type="text/javascript"></script>
+
+<script src="js/vendor/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+
+<!-- IMPORTANT! Load jquery-ui-1.10.1.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+
+<script src="js/vendor/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+
+<script src="js/vendor/bootstrap.min.js" type="text/javascript"></script>
+
+<script src="js/vendor/ajaxfileupload.js" type="text/javascript"></script>
+<!--[if lt IE 9]>
+
+<script src="js/vendor/excanvas.min.js"></script>
+
+<script src="js/vendor/respond.min.js"></script>
+
+<![endif]-->
+
+<script src="js/vendor/jquery.slimscroll.min.js" type="text/javascript"></script>
+
+<script src="js/vendor/jquery.blockui.min.js" type="text/javascript"></script>
+
+<script src="js/vendor/jquery.cookie.min.js" type="text/javascript"></script>
+
+<script src="js/vendor/jquery.uniform.min.js" type="text/javascript" ></script>
+
+<!-- END CORE PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+<script type="text/javascript" src="js/vendor/select2.min.js"></script>
+
+<script type="text/javascript" src="js/vendor/jquery.dataTables.js"></script>
+
+<script type="text/javascript" src="js/vendor/DT_bootstrap.js"></script>
+<script type="text/javascript" src="js/vendor/fnReloadAjax.js"></script>
+<script type="text/javascript" src="js/vendor/jquery.multi-select.js"></script>
+
+
+<!-- END PAGE LEVEL PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+<script src="js/vendor/app.js"></script>
+<script src="js/common/common.js"></script>
+
+<script src="diser/js/diser.js"></script>
+
+<script>
+
+    $("#queryCommBtn").unbind("click").one("click",function () {
+
+            var disId =  sessionStorage.getItem("disId");
+
+            $.ajax({
+                type: "POST",
+                url:"communityAction!getCommunityForDiser.action",
+                data:{"disId":disId},
+                dataType:"json",
+                success: function(data) {
+                    $("#addDiserRel").append('<div class="portlet box green"><div class="portlet-body form">'
+                    +
+                    '<label class="control-label">选择关联小区</label><div class="controls">' +
+                    '<select multiple="multiple" id="my_multi_select1" name="my_multi_select1[]"> </select> </div>' +
+                    '<div class="controls"><button id="js_rel_commbtn" class="btn red ">保存 <i class="icon-ok-sign"></i></button> ' +
+                    '<button id="js_rel_cancelbtn" class="btn yellow "> 取消 <i class="icon-ok-sign"></i></button> </div> </div> ' +
+                    '</div>');
+                    $("#addDiserRel").modal('show') ;
+
+
+                    $("#my_multi_select1").empty();
+                    for (var i = 0; i < data.list.length; i++) {
+
+
+                        var  _html = '<option value='+ data.list[i].commId +'>' + data.list[i].commName + '</option>';
+                        jQuery("#my_multi_select1").append(_html);
+                    }
+
+                    $('#my_multi_select1').multiSelect();
+
+
+                    $("#js_rel_commbtn").unbind("click").one("click",function () {
+
+                        var disId =  sessionStorage.getItem("disId");
+                        var str="";
+                        $("#my_multi_select1").find("option:selected").each(function () {
+                            str += $(this).val() + ",";
+                        });
+                        /*
+                         jQuery("input[type=checkbox]:checked").each(function(){
+                         str+=$(this).val()+",";
+                         });
+                         */
+
+                        $.ajax({
+                            type: "POST",
+                            url:"diserAction!relComm.action",
+                            data:{"disId":disId,"str":str},
+                            dataType:"json",
+                            success: function(data) {
+                                /*    if (data.resultCode==1) {
+                                 $("#addDiserRel").modal('hide');
+                                 createAlertMsgMainWin("关联成功");
+                                 DiserCommTableManaged._table.fnReloadAjax();
+                                 } else {
+                                 createAlertMsgMainWin("关联失败");
+                                 }*/
+                                if (data.resultCode == 1) {
+                                    $("#addDiserRel").empty();
+                                    $("#addDiserRel").modal('hide');
+//                                $(".ms-list").empty();
+                                    createAlertMsgMainWin("关联成功");
+                                    DiserCommTableManaged._table.fnReloadAjax();
+                                } else {
+//                                $(".ms-list").empty();
+                                    $("#addDiserRel").empty();
+                                    $("#addDiserRel").modal('hide');
+                                    createAlertMsgMainWin("关联失败");
+
+                                }
+                            }
+                        });
+                    });
+
+                    $("#js_rel_cancelbtn").unbind("click").one("click",function(){
+
+
+                        $("#addDiserRel").empty();
+                        $("#addDiserRel").modal("hide");
+                    });
+
+
+
+                    /* var _html ='<div class="control-group"> <label>可选小区</label><div class="class="ms-selectable">';
+                     for(var i=0;i<data.list.length;i++){
+                         _html+=' <label class="checkbox">';
+                         _html+=' <input type="checkbox" name="checkList" value="'+data.list[i].commId+'" /> '+data.list[i].commName+'';
+                         _html+='</label>';
+                     }
+                     _html+=' </div></div>';
+                     jQuery("#commList").empty();
+                     jQuery("#commList").append(_html);*/
+
+                    /*   var __html  = '<div style="float:left;"><div><a ><img src="<%=basePath%>Upload/images/'+data.fileName+'" style="width: 200px;height: 100px;" alt=""/></a></div>';
+                     __html += '<div style="padding-left: 50%;">';
+
+                     __html += '<label class="am-radio am-secondary">';
+                     __html +=  '<input type="radio" name="imgR" value="'+data.fileName+'" data-am-ucheck class="am-ucheck-radio"><span class="am-ucheck-icons"><i class="am-icon-unchecked"></i><i class="am-icon-checked"></i></span>';
+                     __html += '</label>';
+                     __html += '</div>';
+                     __html += '</div>';*/
+                    //   jQuery("#images").append();
+                }
+            });
+    });
+
+
+
+    function delCommRel(commId) {
+        var disId =  sessionStorage.getItem("disId");
+        showloading();
+        $.post("diserAction!delCommRel.action",{"commId":commId,"disId":disId},function(data){
+            var resultCode = data.resultCode;
+            if(resultCode==1)
+            {
+                closeloading();
+                $('#msgMain_sign').modal('hide');
+                createAlertMsgMainWin("删除成功");
+                DiserCommTableManaged._table.fnReloadAjax();
+            }
+            else
+            {
+                createAlertMsgMainWin("删除失败");
+            }
+
+        },"json");
+    }
+
+
+
+
+    jQuery(document).ready(function() {
+        //sessionStorage.setItem("disId", disId);
+        var disId =  sessionStorage.getItem("disId");
+        App.init();
+
+        DiserCommTableManaged.init(disId);
+
+        $.ajax({
+            type: "POST",
+            url:"diserAction!queryDiserById.action",
+            data:{"disId":disId},
+            dataType:"json",
+            success: function(data) {
+                if (data.resultCode==1) {
+                    $(".caption").html('<i class="icon-globe"></i>'+data.disName+'  的收件小区');
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

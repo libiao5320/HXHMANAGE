@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbOrder" class="com.hxh.model.TbOrder">
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="orderSeq" column="ORDER_SEQ"/>
+        <result property="commId" column="COMM_ID"/>
+        <result property="chkId" column="CHK_ID"/>
+        <result property="serviceId" column="SERVICE_ID"/>
+        <result property="boxId" column="BOX_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="disId" column="DIS_ID"/>
+        <result property="orderDate" column="ORDER_DATE"/>
+        <result property="orderPrice" column="ORDER_PRICE"/>
+        <result property="orderPhone" column="ORDER_PHONE"/>
+        <result property="orderPaytype" column="ORDER_PAYTYPE"/>
+        <result property="orderType" column="ORDER_TYPE"/>
+        <result property="orderModel" column="ORDER_MODEL"/>
+        <result property="orderStatus" column="ORDER_STATUS"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="TbOrder.columns">
+	    <![CDATA[
+
+        	ORDER_ID ,
+        	ORDER_SEQ ,
+        	COMM_ID ,
+        	CHK_ID ,
+        	SERVICE_ID ,
+        	BOX_ID ,
+        	USER_ID ,
+        	DIS_ID ,
+        	ORDER_DATE ,
+        	ORDER_PRICE ,
+        	ORDER_PHONE ,
+        	ORDER_PAYTYPE ,
+        	ORDER_TYPE ,
+        	ORDER_MODEL ,
+        	ORDER_STATUS 
+
+        ]]>
+	</sql>
+
+    <insert id="TbOrder.insert">
+        <![CDATA[
+        INSERT INTO TB_ORDER (
+        	ORDER_ID ,
+        	ORDER_SEQ ,
+        	COMM_ID ,
+        	CHK_ID ,
+        	SERVICE_ID ,
+        	BOX_ID ,
+        	USER_ID ,
+        	DIS_ID ,
+        	ORDER_DATE ,
+        	ORDER_PRICE ,
+        	ORDER_PHONE ,
+        	ORDER_PAYTYPE ,
+        	ORDER_TYPE ,
+        	ORDER_MODEL ,
+        	ORDER_STATUS 
+        ) VALUES (
+        	#orderId# ,
+        	#orderSeq# ,
+        	#commId# ,
+        	#chkId# ,
+        	#serviceId# ,
+        	#boxId# ,
+        	#userId# ,
+        	#disId# ,
+        	#orderDate# ,
+        	#orderPrice# ,
+        	#orderPhone# ,
+        	#orderPaytype# ,
+        	#orderType# ,
+        	#orderModel# ,
+        	#orderStatus# 
+        )
+    ]]>
+        <!--
+        mysql:		type="post" SELECT  select last_insert_id()
+        sqlserver:	type="post" SELECT  @@identity  AS  ID
+        oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+        DB2:		type="pre"	values nextval for sequenceName
+        -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="orderId">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbOrder.update">
+    <![CDATA[
+
+        UPDATE TB_ORDER SET
+	        ORDER_SEQ = #orderSeq# ,
+	        COMM_ID = #commId# ,
+	        CHK_ID = #chkId# ,
+	        SERVICE_ID = #serviceId# ,
+	        BOX_ID = #boxId# ,
+	        USER_ID = #userId# ,
+	        DIS_ID = #disId# ,
+	        ORDER_DATE = #orderDate# ,
+	        ORDER_PRICE = #orderPrice# ,
+	        ORDER_PHONE = #orderPhone# ,
+	        ORDER_PAYTYPE = #orderPaytype# ,
+	        ORDER_TYPE = #orderType# ,
+	        ORDER_MODEL = #orderModel# ,
+	        ORDER_STATUS = #orderStatus# 
+        WHERE 
+	        ORDER_ID = #orderId# 
+
+        ]]>
+    </update>
+
+    <delete id="TbOrder.delete">
+    <![CDATA[
+
+        DELETE FROM TB_ORDER WHERE
+        ORDER_ID = #orderId# 
+
+        ]]>
+    </delete>
+
+
+    <select id="TbOrder.getById" resultMap="RM.TbOrder">
+        SELECT
+        <include refid="TbOrder.columns"/>
+        <![CDATA[
+	        FROM TB_ORDER 
+	        WHERE 
+		        ORDER_ID = #orderId# 
+	    ]]>
+    </select>
+
+    <sql id="TbOrder.findPage.where">
+        <dynamic prepend="WHERE">
+            <isNotEmpty prepend="AND" property="orderId">
+                ORDER_ID = #orderId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderSeq">
+                ORDER_SEQ = #orderSeq#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="commId">
+                COMM_ID = #commId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="chkId">
+                CHK_ID = #chkId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceId">
+                SERVICE_ID = #serviceId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="boxId">
+                BOX_ID = #boxId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="userId">
+                USER_ID = #userId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="disId">
+                DIS_ID = #disId#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderDate">
+                ORDER_DATE = #orderDate#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderPrice">
+                ORDER_PRICE = #orderPrice#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderPhone">
+                ORDER_PHONE = #orderPhone#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderPaytype">
+                ORDER_PAYTYPE = #orderPaytype#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderType">
+                ORDER_TYPE = #orderType#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderModel">
+                ORDER_MODEL = #orderModel#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="orderStatus">
+                ORDER_STATUS = #orderStatus#
+            </isNotEmpty>
+        </dynamic>
+    </sql>
+
+    <select id="TbOrder.findPage.count" resultClass="long">
+        SELECT count(*) FROM TB_ORDER
+        <include refid="TbOrder.findPage.where"/>
+    </select>
+
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbOrder.findPage" resultMap="RM.TbOrder">
+        SELECT
+        <include refid="TbOrder.columns"/>
+        FROM TB_ORDER
+        <include refid="TbOrder.findPage.where"/>
+        <dynamic prepend="ORDER BY">
+            <isNotEmpty property="sortColumns">$sortColumns$</isNotEmpty>
+        </dynamic>
+    </select>
+
+
+    <select id="TbOrder.queryAll" resultMap="RM.TbOrder">
+        SELECT
+        <include refid="TbOrder.columns"/>
+        FROM TB_ORDER
+    </select>
+
+    <select id="TbOrder.queryOrderList" resultMap="RM.TbOrder">
+        SELECT
+        <include refid="TbOrder.columns"/>
+        FROM TB_ORDER
+        <include refid="TbOrder.findPage.where"/>
+    </select>
+
+    <select id="TbOrder.getBySeq" resultClass="int">
+		SELECT 1 FROM TB_ORDER WHERE ORDER_SEQ = #orderSeq#
+	</select>
+
+
+    <select id="TbOrder.queryOrderByUserId" parameterClass="java.lang.Integer" resultClass="java.util.HashMap">
+		select a.ORDER_ID,a.ORDER_PHONE,a.ORDER_SEQ,a.ORDER_DATE,b.BASEINFO_DELIADD from TB_ORDER a left outer join TB_ORDER_BASE_INFO b on a.ORDER_ID = b.ORDER_ID where a.USER_ID = #value#
+		order by a.ORDER_DATE DESC
+	</select>
+
+
+    <select id="TbOrder.manageListOrders" resultClass="java.util.HashMap">
+
+        select a.ORDER_ID as orderId , a.ORDER_SEQ as orderSeq,a.ORDER_PHONE as orderPhone,b.BASEINFO_SENDADD as
+        sendAdd,a.ORDER_DATE as orderDate,d.STATUS_NAME as orderStatus,b.ORDER_VOICE_PATH as
+        orderVoicePath,b.BASEINFO_DESC as orderComment,c.ORDER_DESC as statusDesc from TB_ORDER a LEFT OUTER JOIN TB_ORDER_BASE_INFO b on
+        a.ORDER_ID = b.ORDER_ID LEFT OUTER JOIN TB_ORDER_STATUS c ON a.ORDER_STATUS = c.ID LEFT OUTER JOIN TB_ORDER_STATUS_CUST d on c.STATUS_ID = d.STATUS_ID
+        <![CDATA[   where 1=1 and a.ORDER_STATUS <> '-1'  ]]>
+        <dynamic >
+            <isEqual prepend="AND"  compareValue="1">
+                <![CDATA[    to_days(a.ORDER_DATE) = to_days(now())    ]]>
+            </isEqual>
+            <isEqual prepend="AND"  compareValue="2">
+                <![CDATA[     YEARWEEK(date_format(a.ORDER_DATE,'%Y-%m-%d')) =  YEARWEEK(now())  ]]>
+            </isEqual>
+            <isEqual prepend="AND"  compareValue="3">
+                <![CDATA[     date_format(a.ORDER_DATE,'%Y-%m')=date_format(now(),'%Y-%m')  ]]>
+            </isEqual>
+
+        </dynamic>
+
+
+        order by a.ORDER_DATE desc
+
+
+    </select>
+
+
+    <select id="TbOrder.manageListOrdersByCondition" resultClass="java.util.HashMap">
+
+        select a.ORDER_ID as orderId , a.ORDER_SEQ as orderSeq,a.ORDER_PHONE as orderPhone,b.BASEINFO_SENDADD as
+        sendAdd,a.ORDER_DATE as orderDate,d.STATUS_NAME as orderStatus,b.ORDER_VOICE_PATH as
+        orderVoicePath,b.BASEINFO_DESC as orderComment,c.ORDER_DESC as statusDesc from TB_ORDER a LEFT OUTER JOIN TB_ORDER_BASE_INFO b on
+        a.ORDER_ID = b.ORDER_ID LEFT OUTER JOIN TB_ORDER_STATUS c ON a.ORDER_STATUS = c.ID LEFT OUTER JOIN TB_ORDER_STATUS_CUST d on c.STATUS_ID = d.STATUS_ID
+        <![CDATA[   where 1=1 and a.ORDER_STATUS <> '-1'  ]]>
+        <dynamic >
+            <isNotEmpty prepend="AND" property="beginDate" >
+                <![CDATA[    date(#beginDate#) <= date(a.ORDER_DATE)    ]]>
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="endDate"  >
+                <![CDATA[     date(#endDate#) >= date(a.ORDER_DATE)  ]]>
+            </isNotEmpty>
+            <isNotEmpty prepend="AND"  property="orderSeq" >
+                <![CDATA[     a.ORDER_SEQ = #orderSeq# ]]>
+            </isNotEmpty>
+            <isNotEmpty prepend="AND"  property="phone" >
+                <![CDATA[    a.ORDER_PHONE = #phone# ]]>
+            </isNotEmpty>
+        </dynamic>
+
+
+        order by a.ORDER_DATE desc
+
+
+    </select>
+
+    <select id="TbOrder.queryOrderDetail" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+
+           select a.ORDER_ID as orderId ,a.USER_ID as userId,a.DIS_ID as disId, a.ORDER_SEQ as orderSeq,a.ORDER_PHONE as orderPhone,b.BASEINFO_SENDADD as
+        sendAdd,a.ORDER_DATE as orderDate,d.STATUS_NAME as orderStatus,b.ORDER_VOICE_PATH as
+        orderVoicePath,b.BASEINFO_DESC as baseInfo ,b.ORDER_COMMENT as orderComment from TB_ORDER a LEFT OUTER JOIN TB_ORDER_BASE_INFO b on
+        a.ORDER_ID = b.ORDER_ID LEFT OUTER JOIN TB_ORDER_STATUS c on a.ORDER_STATUS = c.ID  LEFT OUTER JOIN TB_ORDER_STATUS_CUST d ON c.STATUS_ID = d.STATUS_ID where a.ORDER_ID = #value#
+
+
+    </select>
+
+
+    <update id="TbOrder.delOrder" parameterClass="java.lang.String">
+               UPDATE TB_ORDER SET ORDER_STATUS =  -1 where ORDER_ID  = #value#
+
+
+
+    </update>
+
+
+
+
+</sqlMap>
+

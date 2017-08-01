@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ http://www.springframework.org/schema/tx
+ http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd ">
+
+    <bean id="tbOrderDao" class="com.hxh.dao.TbOrder.impl.TbOrderDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbDiserDao" class="com.hxh.dao.TbDiser.impl.TbDiserDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+   <bean id="tbOrderStatusDao" class="com.hxh.dao.TbOrderStatus.impl.TbOrderStatusDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+    <bean id="tbOrderProRelDao" class="com.hxh.dao.TbOrderProRel.impl.TbOrderProRelDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+
+    <bean id="tbUserDao" class="com.hxh.dao.TbUser.impl.TbUserDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbUserAccountDao" class="com.hxh.dao.TbUserAccount.impl.TbUserAccountDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+    
+    <bean id="tbUserAddressDao" class="com.hxh.dao.TbUserAddress.impl.TbUserAddressDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbUserExtDao" class="com.hxh.dao.TbUserExt.impl.TbUserExtDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbCommunityDao" class="com.hxh.dao.TbCommunity.impl.TbCommunityDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+    <bean id="tbDisCommRelDao" class="com.hxh.dao.TbDisCommRel.impl.TbDisCommRelDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbCommDetailDao" class="com.hxh.dao.TbCommDetail.impl.TbCommDetailDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbRegionalDao" class="com.hxh.dao.TbRegional.impl.TbRegionalDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbProductDao" class="com.hxh.dao.TbProduct.impl.TbProductDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+    <bean id="tbProductTypeDao" class="com.hxh.dao.TbProductType.impl.TbProductTypeDaoImpl">
+        <property name="sqlMapClient">
+            <ref bean="sqlMapClient"/>
+        </property>
+    </bean>
+
+
+
+
+</beans>

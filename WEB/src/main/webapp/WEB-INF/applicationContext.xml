@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ http://www.springframework.org/schema/tx
+ http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd ">
+    <!-- DataSource -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName">
+            <value>com.mysql.jdbc.Driver</value>
+        </property>
+        <!--<property name="defaultAutoCommit" value="false"/>-->
+        <property name="url">
+            <value>jdbc:mysql://192.168.1.152:3306/hxhtest?useUnicode=true&amp;characterEncoding=utf-8</value>
+        </property>
+        <property name="username">
+            <value>root</value>
+        </property>
+        <property name="password">
+            <value>tongyebaba</value>
+        </property>
+        <property name="maxActive">
+            <value>300</value>
+        </property>
+        <property name="maxIdle">
+            <value>60</value>
+        </property>
+        <property name="maxWait">
+            <value>20000</value><!-- 0 -->
+        </property>
+        <property name="removeAbandoned">
+            <value>true</value>
+        </property>
+        <property name="removeAbandonedTimeout">
+            <value>6000000</value><!-- 180 -->
+        </property>
+        <!-- add -->
+        <property name="validationQuery" value="SELECT 1"></property>
+        <property name="testWhileIdle" value="true"></property>
+        <property name="testOnBorrow" value="true"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="3600000"></property>
+        <property name="numTestsPerEvictionRun" value="50"></property>
+        <property name="minEvictableIdleTimeMillis" value="120000"></property>
+        <!-- add -->
+    </bean>
+
+    <!-- Spring iBatis 设置 -->
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation" value="WEB-INF/SqlMapConfig.xml" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <aop:config>
+        <aop:pointcut id="serviceOperation" expression="execution(* com.hxh.services..impl.*ServiceImpl.*(..))"/>
+        <aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice"/>
+    </aop:config>
+
+    <!-- 配置事务通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <tx:advice id="transactionManagerAdivice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*insert*" propagation="REQUIRED"/>
+            <tx:method name="*add*" propagation="REQUIRED"/>
+            <tx:method name="*update*" propagation="REQUIRED"/>
+            <tx:method name="*Update*" propagation="REQUIRED"/>
+            <tx:method name="*del*" propagation="REQUIRED"/>
+            <tx:method name="*create*" propagation="REQUIRED"/>
+
+            <tx:method name="doApproved" propagation="REQUIRED"/>
+            <tx:method name="batchDelFm" propagation="REQUIRED"/>
+            <tx:method name="editTemplate" propagation="REQUIRED"/>
+            <tx:method name="dummyDelete" propagation="REQUIRED"/>
+            <tx:method name="batchDelUser" propagation="REQUIRED"/>
+            <!--<tx:method name="*" propagation="REQUIRED"/>-->
+        </tx:attributes>
+    </tx:advice>
+
+    <import resource="classpath*:applicatinContext_service.xml" />
+
+</beans>
